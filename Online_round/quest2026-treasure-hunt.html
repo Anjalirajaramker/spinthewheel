@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Chaos Key: QUEST2026_WIN -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="quest-key" content="SPIN_THE_WHEEL">
+<title>Spin The Wheel Round 1 - Web Detective</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0b1220;
+  --bg-soft: #162338;
+  --panel: #121e31;
+  --line: #304964;
+  --teal: #71d9c7;
+  --amber: #ffc27d;
+  --rose: #ff8fa3;
+  --text: #deecfb;
+  --muted: #95abc4;
+  --ok: #8ce4b0;
+  --warn: #ff95aa;
+  --mono: 'JetBrains Mono', monospace;
+  --body: 'Space Grotesk', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 8% 8%, rgba(113, 217, 199, 0.24), transparent 30%),
+    radial-gradient(circle at 92% 18%, rgba(255, 194, 125, 0.22), transparent 32%),
+    radial-gradient(circle at 30% 92%, rgba(255, 143, 163, 0.16), transparent 30%),
+    linear-gradient(160deg, #0b1220 0%, #10192a 45%, #162439 100%);
+  color: var(--text);
+  font-family: var(--body);
+}
+
+.shell {
+  width: min(920px, 94vw);
+  margin: 28px auto 60px;
+}
+
+.site-header {
+  position: relative;
+  text-align: center;
+  margin-bottom: 24px;
+  padding: 24px 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: linear-gradient(140deg, rgba(20, 35, 56, 0.9), rgba(16, 26, 41, 0.88));
+  box-shadow: 0 12px 35px rgba(3, 8, 16, 0.45);
+  backdrop-filter: blur(6px);
+}
+
+.site-header::after {
+  content: '';
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: -1px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(113, 217, 199, 0.9), rgba(255, 194, 125, 0.9), transparent);
+}
+
+.badge {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 2.5px;
+  color: var(--amber);
+  background: linear-gradient(135deg, rgba(255, 194, 125, 0.18), rgba(255, 143, 163, 0.12));
+  border: 1px solid rgba(255, 194, 125, 0.45);
+  border-radius: 999px;
+  padding: 8px 16px;
+  box-shadow: 0 0 20px rgba(255, 194, 125, 0.14);
+}
+
+.site-title {
+  font-size: clamp(30px, 6vw, 48px);
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  margin-top: 12px;
+  background: linear-gradient(90deg, #a0f1e4, #ffcf9d, #f7a5b6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.site-sub {
+  color: var(--muted);
+  margin-top: 8px;
+  font-size: 14px;
+  letter-spacing: 0.4px;
+}
+
+.global-timer-wrap {
+  margin-top: 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(113, 217, 199, 0.4);
+  background: rgba(113, 217, 199, 0.1);
+  padding: 10px 16px;
+  border-radius: 10px;
+  box-shadow: inset 0 0 0 1px rgba(113, 217, 199, 0.08);
+}
+
+.gtimer-label {
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 1px;
+  font-family: var(--mono);
+}
+
+.gtimer-val {
+  color: var(--teal);
+  font-family: var(--mono);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.panel {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: linear-gradient(160deg, rgba(18, 30, 49, 0.96), rgba(15, 25, 40, 0.95));
+  box-shadow: 0 14px 35px rgba(4, 10, 20, 0.45);
+  overflow: hidden;
+}
+
+.panel-top {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--mono);
+  color: #b9cbe0;
+  font-size: 12px;
+  background: rgba(12, 20, 32, 0.45);
+}
+
+.panel-body {
+  padding: 20px;
+}
+
+.reg-prompt {
+  font-family: var(--mono);
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 18px;
+  font-size: 13px;
+}
+
+.field-group { margin-bottom: 14px; }
+
+.field-label {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 6px;
+  font-family: var(--mono);
+}
+
+.field-input {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg-soft);
+  color: var(--text);
+  padding: 11px 12px;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.field-input:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 2px rgba(124, 199, 188, 0.25);
+}
+
+.btn-primary, .submit-btn, .hint-btn, .action-btn {
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  font-family: var(--mono);
+}
+
+.btn-primary {
+  width: 100%;
+  border: 1px solid rgba(113, 217, 199, 0.65);
+  background: linear-gradient(135deg, rgba(113, 217, 199, 0.3), rgba(113, 217, 199, 0.12));
+  color: #b9fff2;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 12px;
+  letter-spacing: 1px;
+  box-shadow: 0 8px 20px rgba(14, 44, 48, 0.35);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 26px rgba(19, 58, 64, 0.45);
+}
+
+.err-msg {
+  display: none;
+  margin-top: 8px;
+  color: var(--warn);
+  font-size: 13px;
+}
+
+#game-screen, #success-screen { display: none; }
+
+.progress-bar-wrap {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.prog-dot {
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  text-align: center;
+  padding: 8px 0;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted);
+  background: rgba(15, 23, 32, 0.7);
+}
+
+.prog-dot.active {
+  border-color: rgba(124, 199, 188, 0.6);
+  color: var(--teal);
+}
+
+.prog-dot.done {
+  border-color: rgba(139, 207, 154, 0.7);
+  color: var(--ok);
+  background: rgba(139, 207, 154, 0.1);
+}
+
+.clue-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 16px;
+  background: rgba(15, 23, 32, 0.55);
+}
+
+.meta-item {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.meta-item strong { color: var(--teal); }
+
+.game-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 14px;
+}
+
+.abort-btn {
+  border: 1px solid rgba(255, 143, 163, 0.7);
+  background: linear-gradient(145deg, rgba(255, 143, 163, 0.22), rgba(255, 143, 163, 0.12));
+  color: #ffd2db;
+  border-radius: 10px;
+  padding: 9px 12px;
+  font-size: 11px;
+  font-family: var(--mono);
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.abort-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(88, 20, 41, 0.35);
+}
+
+.clue-card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 18px;
+  background: linear-gradient(160deg, rgba(15, 24, 39, 0.72), rgba(18, 30, 49, 0.72));
+  margin-bottom: 14px;
+  box-shadow: inset 0 0 0 1px rgba(113, 217, 199, 0.05);
+}
+
+.clue-number {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--amber);
+  margin-bottom: 8px;
+}
+
+.clue-type {
+  display: inline-block;
+  border: 1px solid rgba(124, 199, 188, 0.4);
+  background: rgba(124, 199, 188, 0.12);
+  color: var(--teal);
+  border-radius: 999px;
+  font-size: 11px;
+  padding: 4px 10px;
+  font-family: var(--mono);
+  margin-bottom: 10px;
+}
+
+.clue-title {
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+.clue-body {
+  color: #c5d4e4;
+  line-height: 1.7;
+  margin-bottom: 12px;
+  font-size: 16px;
+}
+
+.clue-body code {
+  background: rgba(124, 199, 188, 0.12);
+  border: 1px solid rgba(124, 199, 188, 0.25);
+  border-radius: 6px;
+  padding: 2px 6px;
+  color: var(--teal);
+  font-family: var(--mono);
+}
+
+.clue-body a {
+  color: #9ad5cb;
+  text-decoration: none;
+  border-bottom: 1px dashed rgba(154, 213, 203, 0.5);
+}
+
+.clue-body a:hover {
+  color: #c6ece5;
+}
+
+.clue-hint-box {
+  display: none;
+  margin-bottom: 12px;
+  border: 1px solid rgba(243, 180, 118, 0.45);
+  background: rgba(243, 180, 118, 0.12);
+  color: #ffd9ad;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 14px;
+}
+
+.clue-hint-box.show { display: block; }
+
+.answer-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.answer-row .field-input { flex: 1; }
+
+.submit-btn {
+  border: 1px solid rgba(113, 217, 199, 0.6);
+  background: linear-gradient(140deg, rgba(113, 217, 199, 0.24), rgba(113, 217, 199, 0.14));
+  color: #c4fff5;
+  padding: 10px 14px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.submit-btn:hover { transform: translateY(-1px); }
+
+.answer-feedback {
+  margin-top: 8px;
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.answer-feedback.wrong { color: var(--warn); }
+.answer-feedback.right { color: var(--ok); }
+
+.hint-btn {
+  margin-top: 8px;
+  border: 1px solid rgba(243, 180, 118, 0.5);
+  background: rgba(243, 180, 118, 0.1);
+  color: var(--amber);
+  padding: 8px 10px;
+  font-size: 11px;
+}
+
+.hint-btn:hover { transform: translateY(-1px); }
+
+.penalty-note { color: #f2c79d; }
+
+#success-screen {
+  text-align: center;
+  padding: 10px 0;
+}
+
+.success-icon { font-size: 52px; margin-bottom: 10px; }
+
+.success-title {
+  font-size: 34px;
+  margin-bottom: 4px;
+}
+
+.success-sub {
+  color: var(--muted);
+  margin-bottom: 14px;
+}
+
+.mission-note {
+  width: min(520px, 96%);
+  margin: 0 auto 16px;
+  border: 1px solid rgba(255, 194, 125, 0.58);
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: linear-gradient(135deg, rgba(255, 194, 125, 0.18), rgba(113, 217, 199, 0.16));
+}
+
+.mission-note-text {
+  color: #ffe7c7;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+}
+
+.final-code-box {
+  width: min(380px, 95%);
+  margin: 0 auto 16px;
+  border: 1px solid rgba(124, 199, 188, 0.55);
+  border-radius: 12px;
+  padding: 14px;
+  background: rgba(124, 199, 188, 0.08);
+}
+
+.final-code-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.final-code {
+  margin-top: 6px;
+  font-family: var(--mono);
+  font-size: 30px;
+  color: var(--teal);
+}
+
+.time-taken {
+  color: #f5cf9d;
+  margin-bottom: 12px;
+}
+
+.action-btn {
+  border: 1px solid rgba(255, 194, 125, 0.65);
+  background: linear-gradient(145deg, rgba(255, 194, 125, 0.24), rgba(255, 143, 163, 0.16));
+  color: #ffe6c5;
+  font-size: 13px;
+  padding: 11px 16px;
+}
+
+.action-btn:hover { transform: translateY(-1px); }
+
+@media (max-width: 760px) {
+  .panel-body { padding: 14px; }
+  .progress-bar-wrap { grid-template-columns: repeat(3, 1fr); }
+  .answer-row { flex-direction: column; }
+  .submit-btn { width: 100%; }
+  .abort-btn { width: 100%; }
+  .site-title { line-height: 1.05; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="site-header">
+    <div class="badge">SPIN THE WHEEL · ROUND 1</div>
+    <h1 class="site-title">Web Detective</h1>
+    <p class="site-sub">Treasure Hunt Arena · 5 clues · solve in order · hints cost time</p>
+    <div class="global-timer-wrap">
+      <span class="gtimer-label">ELAPSED</span>
+      <span class="gtimer-val" id="global-timer">00:00:00</span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-top">spinthewheel://round1/web-detective</div>
+    <div class="panel-body">
+
+      <div id="verify-screen">
+        <div class="reg-prompt">
+          $ ./spin-the-wheel --round1 --verify<br>
+          # Verify your identity before starting<br>
+          # Check your details against the approved registration list
+        </div>
+        <div class="field-group">
+          <label class="field-label">YOUR NAME</label>
+          <input class="field-input" id="verify-name" placeholder="Your full name" autocomplete="off">
+        </div>
+        <div class="field-group">
+          <label class="field-label">PHONE NUMBER</label>
+          <input class="field-input" id="verify-phone" placeholder="Your phone number" autocomplete="off">
+        </div>
+        <div class="field-group">
+          <label class="field-label">TEAM NAME</label>
+          <input class="field-input" id="verify-team" placeholder="Your team name" autocomplete="off">
+        </div>
+        <div class="err-msg" id="verify-err">Please fill all fields.</div>
+        <button class="btn-primary" onclick="verifyStudent()">VERIFY & CONTINUE</button>
+      </div>
+
+      <div id="reg-screen" style="display:none;">
+        <div class="reg-prompt">
+          $ ./quest2026 --start<br>
+          # Single participant login only<br>
+          # Fill your details and begin the hunt
+        </div>
+        <div class="field-group">
+          <label class="field-label">PARTICIPANT NAME</label>
+          <input class="field-input" id="player-name" placeholder="Your full name" autocomplete="off">
+        </div>
+        <div class="field-group">
+          <label class="field-label">TEAM NAME</label>
+          <input class="field-input" id="team-name" placeholder="Your team name" autocomplete="off">
+        </div>
+        <div class="err-msg" id="reg-err">Please enter name and team name.</div>
+        <button class="btn-primary" onclick="startHunt()">INITIALIZE HUNT</button>
+      </div>
+
+      <div id="game-screen">
+        <div class="progress-bar-wrap">
+          <div class="prog-dot active" id="pd1">Clue 1</div>
+          <div class="prog-dot" id="pd2">Clue 2</div>
+          <div class="prog-dot" id="pd3">Clue 3</div>
+          <div class="prog-dot" id="pd4">Clue 4</div>
+          <div class="prog-dot" id="pd5">Clue 5</div>
+        </div>
+
+        <div class="clue-meta">
+          <div class="meta-item">TEAM: <strong id="meta-player">-</strong></div>
+          <div class="meta-item">CLUE: <strong id="meta-clue">1/5</strong></div>
+          <div class="meta-item">HINTS USED: <strong id="meta-hints">0</strong></div>
+          <div class="meta-item">STATUS: <strong>ACTIVE</strong></div>
+        </div>
+
+        <div class="game-toolbar">
+          <button class="abort-btn" onclick="abortMission()">MISSION ABORT</button>
+        </div>
+
+        <div id="clue-1" class="clue-card">
+          <div class="clue-number">CLUE 1</div>
+          <div class="clue-type" id="type-1">DOMAIN</div>
+          <div class="clue-title" id="title-1">Question title</div>
+          <div class="clue-body">
+            <p><strong>Task:</strong> <span id="task-1">-</span></p>
+            <p><strong>Clue:</strong> <span id="clue-text-1">-</span></p>
+            <p id="link-wrap-1"><strong>Link:</strong> <a id="link-1" href="#" target="_blank" rel="noopener noreferrer">Open resource</a></p>
+          </div>
+          <div class="clue-hint-box" id="hint1">Hint text</div>
+          <div class="answer-row">
+            <input class="field-input" id="ans1" placeholder="Enter answer" autocomplete="off" onkeydown="if(event.key==='Enter')checkAnswer(1)">
+            <button class="submit-btn" onclick="checkAnswer(1)">SUBMIT</button>
+          </div>
+          <div class="answer-feedback" id="fb1"></div>
+          <button class="hint-btn" onclick="showHint(1)">USE HINT <span class="penalty-note">(-30s)</span></button>
+        </div>
+
+        <div id="clue-2" class="clue-card" style="display:none;">
+          <div class="clue-number">CLUE 2</div>
+          <div class="clue-type" id="type-2">DOMAIN</div>
+          <div class="clue-title" id="title-2">Question title</div>
+          <div class="clue-body">
+            <p><strong>Task:</strong> <span id="task-2">-</span></p>
+            <p><strong>Clue:</strong> <span id="clue-text-2">-</span></p>
+            <p id="link-wrap-2"><strong>Link:</strong> <a id="link-2" href="#" target="_blank" rel="noopener noreferrer">Open resource</a></p>
+          </div>
+          <div class="clue-hint-box" id="hint2">Hint text</div>
+          <div class="answer-row">
+            <input class="field-input" id="ans2" placeholder="Enter exact phrase" autocomplete="off" onkeydown="if(event.key==='Enter')checkAnswer(2)">
+            <button class="submit-btn" onclick="checkAnswer(2)">SUBMIT</button>
+          </div>
+          <div class="answer-feedback" id="fb2"></div>
+          <button class="hint-btn" onclick="showHint(2)">USE HINT <span class="penalty-note">(-30s)</span></button>
+        </div>
+
+        <div id="clue-3" class="clue-card" style="display:none;">
+          <div class="clue-number">CLUE 3</div>
+          <div class="clue-type" id="type-3">DOMAIN</div>
+          <div class="clue-title" id="title-3">Question title</div>
+          <div class="clue-body">
+            <p><strong>Task:</strong> <span id="task-3">-</span></p>
+            <p><strong>Clue:</strong> <span id="clue-text-3">-</span></p>
+            <p id="link-wrap-3"><strong>Link:</strong> <a id="link-3" href="#" target="_blank" rel="noopener noreferrer">Open resource</a></p>
+          </div>
+          <div class="clue-hint-box" id="hint3">Hint text</div>
+          <div class="answer-row">
+            <input class="field-input" id="ans3" placeholder="Enter 3-word slogan" autocomplete="off" onkeydown="if(event.key==='Enter')checkAnswer(3)">
+            <button class="submit-btn" onclick="checkAnswer(3)">SUBMIT</button>
+          </div>
+          <div class="answer-feedback" id="fb3"></div>
+          <button class="hint-btn" onclick="showHint(3)">USE HINT <span class="penalty-note">(-30s)</span></button>
+        </div>
+
+        <div id="clue-4" class="clue-card" style="display:none;">
+          <div class="clue-number">CLUE 4</div>
+          <div class="clue-type" id="type-4">DOMAIN</div>
+          <div class="clue-title" id="title-4">Question title</div>
+          <div class="clue-body">
+            <p><strong>Task:</strong> <span id="task-4">-</span></p>
+            <p><strong>Clue:</strong> <span id="clue-text-4">-</span></p>
+            <p id="link-wrap-4"><strong>Link:</strong> <a id="link-4" href="#" target="_blank" rel="noopener noreferrer">Open resource</a></p>
+          </div>
+          <div class="clue-hint-box" id="hint4">Hint text</div>
+          <div class="answer-row">
+            <input class="field-input" id="ans4" placeholder="Enter one word" autocomplete="off" onkeydown="if(event.key==='Enter')checkAnswer(4)">
+            <button class="submit-btn" onclick="checkAnswer(4)">SUBMIT</button>
+          </div>
+          <div class="answer-feedback" id="fb4"></div>
+          <button class="hint-btn" onclick="showHint(4)">USE HINT <span class="penalty-note">(-30s)</span></button>
+        </div>
+
+        <div id="clue-5" class="clue-card" style="display:none;">
+          <div class="clue-number">CLUE 5</div>
+          <div class="clue-type" id="type-5">DOMAIN</div>
+          <div class="clue-title" id="title-5">Question title</div>
+          <div class="clue-body">
+            <p><strong>Task:</strong> <span id="task-5">-</span></p>
+            <p><strong>Clue:</strong> <span id="clue-text-5">-</span></p>
+            <p id="link-wrap-5"><strong>Link:</strong> <a id="link-5" href="#" target="_blank" rel="noopener noreferrer">Open resource</a></p>
+          </div>
+          <div class="clue-hint-box" id="hint5">Hint text</div>
+          <div class="answer-row">
+            <input class="field-input" id="ans5" placeholder="Enter the Chaos Key" autocomplete="off" onkeydown="if(event.key==='Enter')checkAnswer(5)">
+            <button class="submit-btn" onclick="checkAnswer(5)">SUBMIT</button>
+          </div>
+          <div class="answer-feedback" id="fb5"></div>
+          <button class="hint-btn" onclick="showHint(5)">USE HINT <span class="penalty-note">(-30s)</span></button>
+        </div>
+      </div>
+
+      <div id="success-screen">
+        <div class="success-icon" id="success-icon">🎉🎊</div>
+        <div class="success-title" id="success-title">Mission Complete!</div>
+        <div class="success-sub" id="success-sub">You cracked all 5 clues.</div>
+        <div class="mission-note">
+          <div class="mission-note-text" id="mission-note-text">Your responses have been recorded successfully. We will contact you soon with the results and the shortlist for the Offline Round.</div>
+        </div>
+        <div class="final-code-box">
+          <div class="final-code-label">FINAL CODE</div>
+          <div class="final-code" id="final-code-display">--</div>
+        </div>
+        <div class="time-taken" id="time-taken-display">Time: calculating...</div>
+        <button class="action-btn" onclick="copyResult()">COPY RESULT SUMMARY</button>
+      </div>
+    </div>
+  </div>
+</div>
+<p id="inspect-hidden-text" style="display:none;">JACKPOT</p>
+<button id="inspect-hidden-button" data-code="DEBUG_MASTER" style="display:none;">Hidden Debug</button>
+<img id="inspect-hidden-image" src="golden_spin.png" style="display:none;" alt="hidden image">
+
+<script>
+let state = {
+  participantId: '',
+  player: '',
+  teamName: '',
+  assignedClues: [],
+  currentClue: 1,
+  startTime: null,
+  hintsUsed: 0,
+  penaltySeconds: 0,
+  finished: false,
+  finishTime: null
+};
+
+let timerInterval = null;
+let elapsedSeconds = 0;
+const hintsShown = { 1: false, 2: false, 3: false, 4: false, 5: false };
+const API_URL = 'http://localhost:3000';
+const API = {
+  start: `${API_URL}/api/start`,
+  answer: `${API_URL}/api/answer`,
+  complete: `${API_URL}/api/complete`
+};
+
+function startTimer() {
+  state.startTime = Date.now();
+  timerInterval = setInterval(() => {
+    elapsedSeconds = Math.floor((Date.now() - state.startTime) / 1000) + state.penaltySeconds;
+    document.getElementById('global-timer').textContent = formatTime(elapsedSeconds);
+  }, 1000);
+}
+
+function formatTime(s) {
+  const h = Math.floor(s / 3600).toString().padStart(2, '0');
+  const m = Math.floor((s % 3600) / 60).toString().padStart(2, '0');
+  const sec = (s % 60).toString().padStart(2, '0');
+  return `${h}:${m}:${sec}`;
+}
+
+function normalize(text) {
+  return text
+    .toLowerCase()
+    .replace(/[\u2018\u2019]/g, "'")
+    .replace(/[^a-z0-9' _-]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function renderClues() {
+  for (let i = 1; i <= 5; i++) {
+    const question = state.assignedClues[i - 1];
+    document.getElementById('type-' + i).textContent = question.type;
+    document.getElementById('title-' + i).textContent = question.title;
+    document.getElementById('task-' + i).textContent = question.task;
+    document.getElementById('clue-text-' + i).textContent = question.clue;
+    document.getElementById('hint' + i).textContent = 'Hint: ' + question.hint;
+
+    const linkWrap = document.getElementById('link-wrap-' + i);
+    const link = document.getElementById('link-' + i);
+    if (!question.link) {
+      linkWrap.style.display = 'none';
+    } else {
+      linkWrap.style.display = 'block';
+      link.href = question.link;
+      link.textContent = question.link;
+    }
+  }
+}
+
+async function verifyStudent() {
+  const name = document.getElementById('verify-name').value.trim();
+  const phone = document.getElementById('verify-phone').value.trim();
+  const team = document.getElementById('verify-team').value.trim();
+
+  if (!name || !phone || !team) {
+    document.getElementById('verify-err').style.display = 'block';
+    document.getElementById('verify-err').textContent = 'Please fill all fields.';
+    return;
+  }
+
+  document.getElementById('verify-err').style.display = 'none';
+
+  try {
+    // FIX: Remove the old line and keep only this one
+    const res = await fetch(`${API_URL}/api/verify-student`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, phone_num: phone, team_name: team })
+    });
+
+    const data = await res.json();
+
+    if (data.valid) {
+      document.getElementById('verify-screen').style.display = 'none';
+      document.getElementById('reg-screen').style.display = 'block';
+      document.getElementById('player-name').value = name;
+      document.getElementById('team-name').value = team;
+      document.getElementById('player-name').focus();
+    } else {
+      document.getElementById('verify-err').style.display = 'block';
+      document.getElementById('verify-err').textContent = '❌ Not found in approved list. Check your details.';
+    }
+  } catch (error) {
+    document.getElementById('verify-err').style.display = 'block';
+    document.getElementById('verify-err').textContent = 'Server error. Try again.';
+  }
+}
+
+async function startHunt() {
+  const player = document.getElementById('player-name').value.trim();
+  const teamName = document.getElementById('team-name').value.trim();
+
+  if (!player || !teamName) {
+    document.getElementById('reg-err').style.display = 'block';
+    return;
+  }
+
+  document.getElementById('reg-err').style.display = 'none';
+
+  try {
+    console.log('Starting hunt with:', { name: player, teamName }); // DEBUG
+    
+    const res = await fetch(`${API_URL}/api/start`, {  // ✅ FIX: Use ${API_URL}
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: player, teamName })
+    });
+
+    if (!res.ok) {
+      const error = await res.json();
+      throw new Error(error.error || 'Could not start hunt session.');
+    }
+
+    const payload = await res.json();
+    console.log('Hunt started:', payload); // DEBUG
+
+    state.participantId = payload.participantId;
+    state.player = player;
+    state.teamName = teamName;
+    state.assignedClues = payload.clues;
+
+    renderClues();
+
+    document.getElementById('reg-screen').style.display = 'none';
+    document.getElementById('game-screen').style.display = 'block';
+    document.getElementById('meta-player').textContent = teamName;
+    startTimer();
+
+    setTimeout(() => document.getElementById('ans1').focus(), 250);
+  } catch (error) {
+    console.error('Error:', error); // DEBUG
+    document.getElementById('reg-err').style.display = 'block';
+    document.getElementById('reg-err').textContent = 'Error: ' + error.message;
+  }
+}
+
+
+// COMPLETE checkAnswer FUNCTION
+async function checkAnswer(clueNum) {
+  if (clueNum !== state.currentClue) {
+    alert('Please answer current clue first.');
+    return;
+  }
+
+  const input = document.getElementById('ans' + clueNum);
+  const fb = document.getElementById('fb' + clueNum);
+  const raw = input.value.trim();
+
+  if (!raw) {
+    fb.className = 'answer-feedback wrong';
+    fb.textContent = 'Please enter an answer.';
+    return;
+  }
+
+  fb.className = 'answer-feedback loading';
+  fb.textContent = 'Checking...';
+
+  let accepted = false;
+  try {
+    const res = await fetch(`${API_URL}/api/answer`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        participantId: state.participantId,
+        clueNumber: clueNum,
+        answer: raw
+      })
+    });
+
+    if (!res.ok) {
+      throw new Error('Server error: ' + res.status);
+    }
+
+    const payload = await res.json();
+    accepted = Boolean(payload.correct);
+  } catch (error) {
+    console.error('Answer check error:', error);
+    fb.className = 'answer-feedback wrong';
+    fb.textContent = 'Server error. Please retry.';
+    return;
+  }
+
+  if (accepted) {
+    fb.className = 'answer-feedback right';
+    fb.textContent = '✅ Correct! Next clue unlocked.';
+    input.disabled = true;
+    input.style.opacity = '0.5';
+    
+    setTimeout(() => {
+      advanceClue(clueNum);
+    }, 800);
+  } else {
+    fb.className = 'answer-feedback wrong';
+    fb.textContent = '❌ Not correct. Try again.';
+    input.value = '';
+    input.focus();
+  }
+}
+
+// COMPLETE finishHunt FUNCTION
+async function finishHunt() {
+  clearInterval(timerInterval);
+  state.finished = true;
+  state.finishTime = elapsedSeconds;
+
+  const code = generateCode();
+
+  try {
+    const res = await fetch(`${API_URL}/api/complete`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        participantId: state.participantId,
+        elapsedSeconds: state.finishTime,
+        hintsUsed: state.hintsUsed,
+        penaltySeconds: state.penaltySeconds
+      })
+    });
+
+    if (!res.ok) {
+      console.error('Completion sync failed:', res.status);
+    }
+  } catch (error) {
+    console.error('Completion error:', error);
+    // Continue anyway - show success screen
+  }
+
+  document.getElementById('game-screen').style.display = 'none';
+  document.getElementById('success-screen').style.display = 'block';
+  document.getElementById('success-icon').textContent = '🎉🎊';
+  document.getElementById('success-title').textContent = 'Mission Complete!';
+  document.getElementById('success-sub').textContent = 'You cracked all 5 clues.';
+  document.getElementById('mission-note-text').textContent = 'Your responses have been recorded successfully. We will contact you soon with the results and the shortlist for the Offline Round.';
+  document.getElementById('final-code-display').textContent = code;
+  document.getElementById('time-taken-display').textContent = `⏱️ Time: ${formatTime(state.finishTime)} | 💡 Hints: ${state.hintsUsed}`;
+}
+
+async function abortMission() {
+  if (state.finished) return;
+
+  const warningMessage = 'MISSION ABORT? ⚠️\n\nAre you sure you want to stop here? Your progress will be locked as-is, and you will NOT be able to re-enter or try again. Don\'t leave the mystery unsolved, Detective!';
+  const confirmed = confirm(warningMessage);
+  if (!confirmed) return;
+
+  clearInterval(timerInterval);
+  state.finished = true;
+  state.finishTime = elapsedSeconds;
+
+  try {
+    await fetch(`${API_URL}/api/complete`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        participantId: state.participantId,
+        elapsedSeconds: state.finishTime,
+        hintsUsed: state.hintsUsed,
+        penaltySeconds: state.penaltySeconds,
+        aborted: true
+      })
+    });
+  } catch (error) {
+    console.error('Abort sync error:', error);
+  }
+
+  document.getElementById('game-screen').style.display = 'none';
+  document.getElementById('success-screen').style.display = 'block';
+  document.getElementById('success-icon').textContent = '⚠️';
+  document.getElementById('success-title').textContent = 'INVESTIGATION TERMINATED 🔒';
+  document.getElementById('success-sub').textContent = 'Your progress has been logged successfully. The system is now locked and access has been revoked.';
+  document.getElementById('mission-note-text').textContent = 'Your score will be evaluated for the leaderboard.';
+  document.getElementById('final-code-display').textContent = 'ABORTED';
+  document.getElementById('time-taken-display').textContent = `⏱️ Time: ${formatTime(state.finishTime)} | 💡 Hints: ${state.hintsUsed}`;
+}
+
+// HELPER FUNCTION (if missing)
+function generateCode() {
+  const timestamp = Date.now().toString(36).toUpperCase();
+  const name = (state.player || 'PLAYER').substring(0, 3).toUpperCase();
+  const time = Math.floor(state.finishTime).toString(36).toUpperCase();
+  return `${name}-${time}-${timestamp}`.substring(0, 12);
+}
+
+function formatTime(seconds) {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins}m ${secs}s`;
+}
+
+function copyResult() {
+  const summary = `Quest 2026 Result\nPlayer: ${state.player}\nTeam: ${state.teamName}\nTime: ${formatTime(state.finishTime)}\nFinal Code: ${document.getElementById('final-code-display').textContent}`;
+  navigator.clipboard.writeText(summary)
+    .then(() => alert('Result copied to clipboard.'))
+    .catch(() => alert('Could not copy automatically.'));
+}
+
+function showHint(clueNum) {
+  if (hintsShown[clueNum]) return;
+  hintsShown[clueNum] = true;
+  state.hintsUsed++;
+  state.penaltySeconds += 30;
+  document.getElementById('hint' + clueNum).classList.add('show');
+  document.getElementById('meta-hints').textContent = state.hintsUsed;
+}
+
+function advanceClue(current) {
+  state.currentClue = current + 1;
+  
+  for (let i = 1; i <= 5; i++) {
+    document.getElementById('clue-' + i).style.display = i === state.currentClue ? 'block' : 'none';
+    document.getElementById('pd' + i).className = i < state.currentClue ? 'prog-dot done' : i === state.currentClue ? 'prog-dot active' : 'prog-dot';
+  }
+  
+  document.getElementById('meta-clue').textContent = `${state.currentClue}/5`;
+  
+  if (state.currentClue > 5) {
+    finishHunt();
+  } else {
+    setTimeout(() => document.getElementById('ans' + state.currentClue).focus(), 250);
+  }
+}
+
+</script>
+</body>
+</html>

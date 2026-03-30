@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quest 2026 Admin</title>
+<style>
+:root {
+  --bg: #0f1720;
+  --panel: #172433;
+  --line: #2b4058;
+  --text: #d7e3ef;
+  --muted: #90a7bc;
+  --accent: #7cc7bc;
+  --warn: #f3b476;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  background: linear-gradient(160deg, #0f1720 0%, #132130 100%);
+  color: var(--text);
+}
+.wrap {
+  max-width: 1200px;
+  margin: 24px auto;
+  padding: 0 14px 28px;
+}
+.panel {
+  background: rgba(23, 36, 51, 0.95);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+h1 {
+  margin: 0 0 12px;
+  font-size: 28px;
+}
+.controls {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+input, textarea, select, button {
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  padding: 10px 12px;
+  font-size: 14px;
+  font-family: inherit;
+}
+textarea { min-height: 86px; }
+input, textarea, select {
+  background: #0f1a26;
+  color: var(--text);
+}
+button {
+  background: rgba(124, 199, 188, 0.16);
+  color: var(--accent);
+  cursor: pointer;
+}
+button:hover { opacity: 0.95; }
+button.warn {
+  background: rgba(243, 180, 118, 0.16);
+  color: var(--warn);
+}
+.stats {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.stat {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  min-width: 150px;
+  background: rgba(15, 26, 38, 0.6);
+}
+.stat .label {
+  color: var(--muted);
+  font-size: 12px;
+}
+.stat .value {
+  margin-top: 4px;
+  font-size: 22px;
+  color: var(--accent);
+}
+.table-wrap {
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 980px;
+}
+th, td {
+  text-align: left;
+  border-bottom: 1px solid #223446;
+  padding: 10px 10px;
+  font-size: 13px;
+  vertical-align: top;
+}
+th { color: var(--muted); background: #101d2a; }
+.badge {
+  display: inline-block;
+  border: 1px solid #37526b;
+  padding: 3px 7px;
+  border-radius: 999px;
+  font-size: 11px;
+}
+.badge.completed {
+  border-color: #3f6d59;
+  color: #9ad7ad;
+}
+.badge.active {
+  border-color: #6a5c3a;
+  color: var(--warn);
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+@media (max-width: 900px) {
+  .grid { grid-template-columns: 1fr; }
+}
+.msg {
+  margin-top: 8px;
+  color: var(--warn);
+  font-size: 13px;
+}
+.small {
+  color: var(--muted);
+  font-size: 12px;
+}
+.actions button {
+  margin-right: 6px;
+  margin-bottom: 6px;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="panel">
+    <h1>Quest 2026 Admin Dashboard</h1>
+    <div class="controls">
+      <input id="key" placeholder="Enter admin key" />
+      <button id="load">Load Results</button>
+      <button id="download">Download CSV</button>
+      <button id="load-questions">Load Questions</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="label">Total Participants</div>
+        <div class="value" id="stat-total">0</div>
+      </div>
+      <div class="stat">
+        <div class="label">Completed</div>
+        <div class="value" id="stat-completed">0</div>
+      </div>
+      <div class="stat">
+        <div class="label">Average Time (sec)</div>
+        <div class="value" id="stat-avg">0</div>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Team</th>
+            <th>Status</th>
+            <th>Elapsed (sec)</th>
+            <th>Hints</th>
+            <th>Penalty (sec)</th>
+            <th>Final Code</th>
+            <th>Assigned Questions</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <div class="msg" id="msg"></div>
+  </div>
+
+  <div class="panel">
+    <h2 style="margin-top:0">Question Bank Manager</h2>
+    <div class="small">Add new questions or update existing ones without redeploy.</div>
+    <br>
+    <div class="grid">
+      <input id="q-id" placeholder="Question ID (e.g. gh-new-clue)" />
+      <select id="q-domain">
+        <option value="github">github</option>
+        <option value="docs">docs</option>
+        <option value="wikipedia">wikipedia</option>
+        <option value="wayback">wayback</option>
+        <option value="inspect">inspect</option>
+      </select>
+      <input id="q-type" placeholder="Type label (e.g. GITHUB HUNT)" />
+      <input id="q-title" placeholder="Question title" />
+      <textarea id="q-task" placeholder="Task"></textarea>
+      <textarea id="q-clue" placeholder="Clue text"></textarea>
+      <input id="q-link" placeholder="Link (optional)" />
+      <input id="q-hint" placeholder="Hint" />
+      <textarea id="q-answers" placeholder="Answers (comma separated)"></textarea>
+    </div>
+    <br>
+    <div class="controls">
+      <button id="add-question">Add Question</button>
+      <button id="update-question">Update Question</button>
+      <button class="warn" id="clear-form">Clear Form</button>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Domain</th>
+            <th>Title</th>
+            <th>Type</th>
+            <th>Hint</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="question-rows"></tbody>
+      </table>
+    </div>
+    <div class="msg" id="q-msg"></div>
+  </div>
+</div>
+
+<script>
+const keyInput = document.getElementById('key');
+const msgEl = document.getElementById('msg');
+const qMsgEl = document.getElementById('q-msg');
+let questionCache = [];
+
+function setMessage(msg) {
+  msgEl.textContent = msg || '';
+}
+
+function setQMessage(msg) {
+  qMsgEl.textContent = msg || '';
+}
+
+function fmt(value) {
+  if (value === null || value === undefined || value === '') return '-';
+  return String(value);
+}
+
+function getAdminKey() {
+  return keyInput.value.trim();
+}
+
+function apiUrl(path) {
+  const key = getAdminKey();
+  return `${path}${path.includes('?') ? '&' : '?'}key=${encodeURIComponent(key)}`;
+}
+
+function renderResults(data) {
+  const results = data.results || [];
+  document.getElementById('stat-total').textContent = data.totalParticipants || 0;
+  document.getElementById('stat-completed').textContent = data.completed || 0;
+
+  const completedTimes = results
+    .filter(r => r.status === 'completed' && Number.isFinite(Number(r.elapsedSeconds)))
+    .map(r => Number(r.elapsedSeconds));
+  const avg = completedTimes.length
+    ? Math.round(completedTimes.reduce((a, b) => a + b, 0) / completedTimes.length)
+    : 0;
+  document.getElementById('stat-avg').textContent = avg;
+
+  const rowsEl = document.getElementById('rows');
+  rowsEl.innerHTML = results.map(r => {
+    const badge = r.status === 'completed' ? 'completed' : 'active';
+    const questions = (r.assignedQuestions || []).join(' | ');
+    return `
+      <tr>
+        <td>${fmt(r.name)}</td>
+        <td>${fmt(r.teamName)}</td>
+        <td><span class="badge ${badge}">${fmt(r.status)}</span></td>
+        <td>${fmt(r.elapsedSeconds)}</td>
+        <td>${fmt(r.hintsUsed)}</td>
+        <td>${fmt(r.penaltySeconds)}</td>
+        <td>${fmt(r.finalCode)}</td>
+        <td>${fmt(questions)}</td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function readQuestionForm() {
+  const answers = document.getElementById('q-answers').value
+    .split(',')
+    .map(v => v.trim())
+    .filter(Boolean);
+
+  return {
+    id: document.getElementById('q-id').value.trim(),
+    domain: document.getElementById('q-domain').value.trim(),
+    type: document.getElementById('q-type').value.trim(),
+    title: document.getElementById('q-title').value.trim(),
+    task: document.getElementById('q-task').value.trim(),
+    clue: document.getElementById('q-clue').value.trim(),
+    link: document.getElementById('q-link').value.trim(),
+    hint: document.getElementById('q-hint').value.trim(),
+    answers
+  };
+}
+
+function fillQuestionForm(q) {
+  document.getElementById('q-id').value = q.id || '';
+  document.getElementById('q-domain').value = q.domain || 'github';
+  document.getElementById('q-type').value = q.type || '';
+  document.getElementById('q-title').value = q.title || '';
+  document.getElementById('q-task').value = q.task || '';
+  document.getElementById('q-clue').value = q.clue || '';
+  document.getElementById('q-link').value = q.link || '';
+  document.getElementById('q-hint').value = q.hint || '';
+  document.getElementById('q-answers').value = Array.isArray(q.answers) ? q.answers.join(', ') : '';
+}
+
+function clearQuestionForm() {
+  fillQuestionForm({ domain: 'github' });
+}
+
+function renderQuestions(data) {
+  questionCache = data.questions || [];
+  const rowsEl = document.getElementById('question-rows');
+
+  rowsEl.innerHTML = questionCache.map(q => {
+    const status = q.isActive === false ? 'inactive' : 'active';
+    return `
+      <tr>
+        <td>${fmt(q.id)}</td>
+        <td>${fmt(q.domain)}</td>
+        <td>${fmt(q.title)}</td>
+        <td>${fmt(q.type)}</td>
+        <td>${fmt(q.hint)}</td>
+        <td>${status}</td>
+        <td class="actions">
+          <button onclick="editQuestion('${q.id.replace(/'/g, "\\'")}')">Edit</button>
+          <button class="warn" onclick="deactivateQuestion('${q.id.replace(/'/g, "\\'")}')">Deactivate</button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+async function loadResults() {
+  const key = getAdminKey();
+  if (!key) {
+    setMessage('Enter admin key first.');
+    return;
+  }
+
+  setMessage('Loading results...');
+  try {
+    const res = await fetch(apiUrl('/api/admin/results'));
+    if (!res.ok) {
+      setMessage('Failed to load results. Check admin key.');
+      return;
+    }
+    const payload = await res.json();
+    renderResults(payload);
+    setMessage(`Loaded ${payload.totalParticipants || 0} participants.`);
+  } catch (err) {
+    setMessage('Server unreachable.');
+  }
+}
+
+function downloadCsv() {
+  const key = getAdminKey();
+  if (!key) {
+    setMessage('Enter admin key first.');
+    return;
+  }
+  window.open(apiUrl('/api/admin/export'), '_blank');
+}
+
+async function loadQuestions() {
+  const key = getAdminKey();
+  if (!key) {
+    setQMessage('Enter admin key first.');
+    return;
+  }
+
+  setQMessage('Loading questions...');
+  try {
+    const res = await fetch(apiUrl('/api/admin/questions?includeInactive=true'));
+    if (!res.ok) {
+      setQMessage('Failed to load questions. Check admin key.');
+      return;
+    }
+    const payload = await res.json();
+    renderQuestions(payload);
+    setQMessage(`Loaded ${payload.count || 0} questions.`);
+  } catch (err) {
+    setQMessage('Server unreachable.');
+  }
+}
+
+async function addQuestion() {
+  const payload = readQuestionForm();
+  const key = getAdminKey();
+
+  if (!key) {
+    setQMessage('Enter admin key first.');
+    return;
+  }
+
+  if (!payload.id || !payload.domain || !payload.type || !payload.title || !payload.task || !payload.clue || !payload.hint || payload.answers.length === 0) {
+    setQMessage('Fill all required fields.');
+    return;
+  }
+
+  try {
+    const res = await fetch(apiUrl('/api/admin/questions'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) {
+      const error = await res.json().catch(() => ({}));
+      setQMessage(error.error || 'Failed to add question.');
+      return;
+    }
+    setQMessage('Question added.');
+    await loadQuestions();
+  } catch (err) {
+    setQMessage('Server unreachable.');
+  }
+}
+
+async function updateQuestion() {
+  const payload = readQuestionForm();
+  const key = getAdminKey();
+
+  if (!key) {
+    setQMessage('Enter admin key first.');
+    return;
+  }
+
+  if (!payload.id) {
+    setQMessage('Question ID is required for update.');
+    return;
+  }
+
+  try {
+    const res = await fetch(apiUrl(`/api/admin/questions/${encodeURIComponent(payload.id)}`), {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) {
+      const error = await res.json().catch(() => ({}));
+      setQMessage(error.error || 'Failed to update question.');
+      return;
+    }
+    setQMessage('Question updated.');
+    await loadQuestions();
+  } catch (err) {
+    setQMessage('Server unreachable.');
+  }
+}
+
+async function deactivateQuestion(id) {
+  const key = getAdminKey();
+  if (!key) {
+    setQMessage('Enter admin key first.');
+    return;
+  }
+
+  if (!confirm(`Deactivate question ${id}?`)) return;
+
+  try {
+    const res = await fetch(apiUrl(`/api/admin/questions/${encodeURIComponent(id)}`), {
+      method: 'DELETE'
+    });
+    if (!res.ok) {
+      const error = await res.json().catch(() => ({}));
+      setQMessage(error.error || 'Failed to deactivate question.');
+      return;
+    }
+    setQMessage('Question deactivated.');
+    await loadQuestions();
+  } catch (err) {
+    setQMessage('Server unreachable.');
+  }
+}
+
+function editQuestion(id) {
+  const q = questionCache.find(item => item.id === id);
+  if (!q) return;
+  fillQuestionForm(q);
+  setQMessage(`Loaded ${id} into form.`);
+}
+
+window.editQuestion = editQuestion;
+window.deactivateQuestion = deactivateQuestion;
+
+document.getElementById('load').addEventListener('click', loadResults);
+document.getElementById('download').addEventListener('click', downloadCsv);
+document.getElementById('load-questions').addEventListener('click', loadQuestions);
+document.getElementById('add-question').addEventListener('click', addQuestion);
+document.getElementById('update-question').addEventListener('click', updateQuestion);
+document.getElementById('clear-form').addEventListener('click', clearQuestionForm);
+
+clearQuestionForm();
+</script>
+</body>
+</html>

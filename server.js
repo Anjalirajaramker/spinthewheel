@@ -835,17 +835,24 @@ app.post('/api/verify-student', (req, res) => {
   console.log('=== VERIFICATION DEBUG ===');
   console.log('Input:', { name, team_name, phone_num });
   console.log('Total students in sheet:', approvedStudents.length);
-  console.log('First student:', approvedStudents[0]);
+  if (approvedStudents.length > 0) {
+    console.log('First student:', approvedStudents[0]);
+  }
   
   const found = approvedStudents.some(row => {
-    const rowName = (row['Full Name '] || '').toString().trim().toLowerCase();
-    const rowTeam = (row['Team Name (Fill the same name as your Teammate)'] || '').toString().trim().toLowerCase();
-    const rowPhone = (row['Mobile No'] || '').toString().trim();
+    // Handle all variations of column names and data types
+    const rowName = (row['Full Name'] || row['Full Name '] || row['Name'] || '').toString().trim().toLowerCase();
+    const rowTeam = (row['Team Name (Enter the SAME Team Name as your teammates)'] || 
+                     row['Team Name (Fill the same name as your Teammate)'] || 
+                     row['Team Name'] || 
+                     row['Team'] || '').toString().trim().toLowerCase();
+    const rowPhone = String(row['Mobile No'] || row['Phone'] || row['Mobile'] || '').trim();
     
-    const match = 
-      rowName === name?.trim().toLowerCase() &&
-      rowTeam === team_name?.trim().toLowerCase() &&
-      rowPhone === phone_num?.trim();
+    const inputName = String(name || '').trim().toLowerCase();
+    const inputTeam = String(team_name || '').trim().toLowerCase();
+    const inputPhone = String(phone_num || '').trim();
+    
+    const match = rowName === inputName && rowTeam === inputTeam && rowPhone === inputPhone;
     
     if (match) {
       console.log('✅ MATCH FOUND:', { rowName, rowTeam, rowPhone });

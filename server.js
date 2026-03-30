@@ -832,6 +832,11 @@ function requireAdmin(req, res, next) {
 app.post('/api/verify-student', (req, res) => {
   const { name, team_name, phone_num } = req.body;
   
+  console.log('=== VERIFICATION DEBUG ===');
+  console.log('Input:', { name, team_name, phone_num });
+  console.log('Total students in sheet:', approvedStudents.length);
+  console.log('First student:', approvedStudents[0]);
+  
   const found = approvedStudents.some(row => {
     const rowName = (row['Full Name '] || '').toString().trim().toLowerCase();
     const rowTeam = (row['Team Name (Fill the same name as your Teammate)'] || '').toString().trim().toLowerCase();
@@ -842,9 +847,14 @@ app.post('/api/verify-student', (req, res) => {
       rowTeam === team_name?.trim().toLowerCase() &&
       rowPhone === phone_num?.trim();
     
+    if (match) {
+      console.log('✅ MATCH FOUND:', { rowName, rowTeam, rowPhone });
+    }
+    
     return match;
   });
   
+  console.log('Result:', { valid: found });
   res.json({ valid: found });
 });
 app.post('/api/start', async (req, res) => {

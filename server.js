@@ -6,6 +6,7 @@ const crypto = require('crypto');
 const { Pool } = require('pg');
 const XLSX = require('xlsx');
 const app = express();
+const PORT = process.env.PORT || 3000;
 const baseUrl = process.env.BASE_URL || `http://localhost:${PORT}`;
 const ADMIN_KEY = process.env.ADMIN_KEY || 'quest-admin-2026';
 const DATABASE_URL = process.env.DATABASE_URL || '';

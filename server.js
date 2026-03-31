@@ -231,8 +231,7 @@ const QUESTION_BANK = {
       task: 'Visit the Wikipedia page for Linux.',
       clue: "The world's most famous open-source operating system started as a personal project. According to Wikipedia, in which year was Linux first released?",
       link: 'https://en.wikipedia.org/wiki/Linux',
-      hint: "Look in the infobox under 'Initial release'.",
-      answers: ['1991']
+      hint: "Look in the infobox under 'Initial release'."
     },
     {
       id: 'wiki-turing',
@@ -501,45 +500,39 @@ function writeStore(store) {
   fs.writeFileSync(DB_FILE, JSON.stringify(store, null, 2), 'utf8');
 }
 
+// Replace listQuestions - Use QUESTION_BANK directly
 async function listQuestions(includeInactive = false) {
-  if (!USE_DATABASE) {
-    const store = readStore();
-    const all = Array.isArray(store.questions) ? store.questions : [];
-    return includeInactive ? all : all.filter(q => q.isActive !== false);
-  }
-
-  const query = includeInactive
-    ? 'SELECT * FROM questions ORDER BY domain, title'
-    : 'SELECT * FROM questions WHERE is_active = TRUE ORDER BY domain, title';
-  const { rows } = await pool.query(query);
-  return rows.map(row => ({
-    id: row.id,
-    domain: row.domain,
-    type: row.type,
-    title: row.title,
-    task: row.task,
-    clue: row.clue,
-    link: row.link || '',
-    hint: row.hint,
-    answers: Array.isArray(row.answers) ? row.answers : [],
-    isActive: Boolean(row.is_active)
-  }));
+  const all = Object.entries(QUESTION_BANK)
+    .flatMap(([domain, list]) =>
+      list.map(question => ({
+        ...question,
+        domain: normalizeDomainName(domain),
+        isActive: true
+      }))
+    );
+  
+  return includeInactive ? all : all.filter(q => q.isActive !== false);
 }
 
+// Replace getQuestionsByDomain - Use QUESTION_BANK directly
+async function getQuestionsByDomain() {
+  return Object.entries(QUESTION_BANK)
+    .reduce((acc, [domain, questions]) => {
+      const normalizedDomain = normalizeDomainName(domain);
+      acc[normalizedDomain] = questions.map(q => ({
+        ...q,
+        domain: normalizedDomain,
+        isActive: true
+      }));
+      return acc;
+    }, {});
+}
+
+// Replace getQuestionMapById - Use QUESTION_BANK directly
 async function getQuestionMapById(includeInactive = false) {
   const questions = await listQuestions(includeInactive);
   return questions.reduce((acc, q) => {
     acc[q.id] = q;
-    return acc;
-  }, {});
-}
-
-async function getQuestionsByDomain() {
-  const questions = await listQuestions(false);
-  return questions.reduce((acc, q) => {
-    const domain = normalizeDomainName(q.domain);
-    if (!acc[domain]) acc[domain] = [];
-    acc[domain].push({ ...q, domain });
     return acc;
   }, {});
 }

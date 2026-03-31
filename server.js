@@ -57,18 +57,18 @@ async function loadApprovedStudents() {
 // Load on startup
 loadApprovedStudents();
 setInterval(loadApprovedStudents, 60000);
-const DOMAIN_ORDER = ['github', 'docs', 'wikipedia', 'wayback', 'inspect'];
+const DOMAIN_ORDER = ['github', 'docs', 'wikipedia', 'neal', 'inspect'];
 const QUESTION_BANK = {
   github: [
     {
       id: 'gh-octocat',
       type: 'GITHUB HUNT',
-      title: 'The Octocat Detective',
+      title: 'The Octodex Gallery',
       task: 'Visit the GitHub Octodex gallery.',
-      clue: 'I am the famous mascot guarding millions of repositories. My species is half cat and half something else. Visit the Octodex page and tell us what this creature is officially called.',
+      clue: 'GitHub\'s mascot appears in many creative costumes here. Visit the Octodex gallery and tell us the name used to describe these mascot illustrations.',
       link: 'https://octodex.github.com',
-      hint: 'Look at the name used to describe the GitHub mascot on the Octodex page.',
-      answers: ['octocat']
+      hint: 'Look at the title of the website itself.',
+      answers: ['octodex']
     },
     {
       id: 'gh-hello-world',
@@ -83,12 +83,12 @@ const QUESTION_BANK = {
     {
       id: 'gh-trending',
       type: 'GITHUB HUNT',
-      title: 'The Trending Treasure',
-      task: 'Visit GitHub Trending.',
-      clue: 'Developers around the world share their best work here. Visit the GitHub Trending page and find the repository currently ranked #1. What is its name?',
-      link: 'https://github.com/trending',
-      hint: 'Check the very first repository listed on the Trending page.',
-      answers: ['depends on current trending repo']
+      title: 'The Linux Kernel Vault',
+      task: 'Visit the Linux kernel repository on GitHub.',
+      clue: 'The world\'s most famous open-source operating system lives here. Visit the Linux repository on GitHub and find the username of the person who created this repository.',
+      link: 'https://github.com/torvalds/linux',
+      hint: 'Look at the repository URL and the owner name at the top of the page.',
+      answers: ['torvalds']
     },
     {
       id: 'gh-stars',
@@ -231,7 +231,8 @@ const QUESTION_BANK = {
       task: 'Visit the Wikipedia page for Linux.',
       clue: "The world's most famous open-source operating system started as a personal project. According to Wikipedia, in which year was Linux first released?",
       link: 'https://en.wikipedia.org/wiki/Linux',
-      hint: "Look in the infobox under 'Initial release'."
+      hint: "Look in the infobox under 'Initial release'.",
+      answers: ['1991']
     },
     {
       id: 'wiki-turing',
@@ -244,66 +245,66 @@ const QUESTION_BANK = {
       answers: ['turing machine']
     }
   ],
-  wayback: [
+  neal: [
     {
-      id: 'wb-google',
-      type: 'WAYBACK DETECTIVE',
-      title: 'The Google Time Travel',
-      task: 'Use the Wayback Machine to visit Google from the year 2000.',
-      clue: "Travel back in time to the year 2000 and visit the Google homepage. Look carefully at the logo displayed there. What punctuation mark appears at the end of the word 'Google'?",
-      link: 'https://archive.org',
-      hint: 'Search for google.com in the Wayback Machine and select a snapshot from the year 2000.',
-      answers: ['!', 'exclamation mark', 'exclamation']
+      id: 'neal-rigel',
+      type: 'NEAL.FUN HUNT',
+      title: 'The Bright Blue Giant',
+      task: 'Visit the Space scale explorer.',
+      clue: 'In the cosmic scale of stars, one brilliant blue star shines in the Orion constellation. Find Rigel in the Space visualization. According to the page, what type of star is Rigel?',
+      link: 'https://neal.fun/',
+      hint: 'Scroll through the star comparison until you find Rigel.',
+      answers: ['blue supergiant star']
     },
     {
-      id: 'wb-facebook',
-      type: 'WAYBACK DETECTIVE',
-      title: 'The Facebook Beginning',
-      task: 'Use Wayback Machine to see Facebook in its early days.',
-      clue: 'Before Facebook became a global platform, its homepage had a slightly different name. Using Wayback Machine, visit the Facebook homepage from 2004. What word appeared before Facebook in the original name?',
-      link: 'https://archive.org',
-      hint: 'Look for snapshots from 2004.',
-      answers: ['the', 'thefacebook']
+      id: 'neal-crab',
+      type: 'NEAL.FUN HUNT',
+      title: 'The Cosmic Crab',
+      task: 'Visit the Space scale explorer.',
+      clue: 'In the vast universe, the remains of an exploded star form a glowing cloud named after a sea creature. Find the Crab Nebula in the space visualization. According to the page, what type of cosmic object is it?',
+      link: 'https://neal.fun/',
+      hint: 'Look just below the name of the object.',
+      answers: ['supernova remnant']
     },
     {
-      id: 'wb-youtube',
-      type: 'WAYBACK DETECTIVE',
-      title: 'The YouTube First Look',
-      task: "View YouTube's homepage from its early days.",
-      clue: 'Travel back to the early days of YouTube using the Wayback Machine. On the homepage from 2005, what slogan appears under the YouTube logo?',
-      link: 'https://archive.org',
-      hint: 'Search youtube.com and select 2005 snapshots.',
-      answers: ['broadcast yourself']
+      id: 'neal-angler',
+      type: 'NEAL.FUN HUNT',
+      title: 'The Glowing Angler',
+      task: 'Visit the Deep Sea explorer.',
+      clue: 'A fish that hunts with a glowing light on its head waits in the darkness. Find the Anglerfish in the deep sea chart. According to the page, in which ocean region does this creature live?',
+      link: 'https://neal.fun/',
+      hint: 'Scroll into the dark part of the ocean.',
+      answers: ['the midnight zone', 'midnight zone']
     },
     {
-      id: 'wb-wikipedia',
-      type: 'WAYBACK DETECTIVE',
-      title: 'The Wikipedia Past',
-      task: "View Wikipedia's old homepage.",
-      clue: 'Wikipedia has grown a lot over the years. Use Wayback Machine to visit wikipedia.org in 2003. What phrase appears below the Wikipedia logo describing the site?',
-      link: 'https://archive.org',
-      hint: 'Look at the main description line under the logo.',
-      answers: ['the free encyclopedia', 'free encyclopedia']
+      id: 'neal-spider-crab',
+      type: 'NEAL.FUN HUNT',
+      title: 'The Giant of the Twilight',
+      task: 'Visit the Deep Sea explorer.',
+      clue: 'One of the largest arthropods on Earth crawls slowly in the deep ocean. Find the Japanese Spider Crab in the Deep Sea visualization. According to the chart, in which ocean region does this creature live?',
+      link: 'https://neal.fun/',
+      hint: 'You will find it not too deep in the ocean — do not scroll too far down.',
+      answers: ['the twilight zone', 'twilight zone']
     },
     {
-      id: 'wb-apple',
-      type: 'WAYBACK DETECTIVE',
-      title: 'The Apple Website Throwback',
-      task: "Visit Apple's old homepage.",
-      clue: 'Use Wayback Machine to visit apple.com in 2007. What famous device was prominently promoted on the homepage during that year?',
-      link: 'https://archive.org',
-      hint: 'Look for snapshots from mid-2007.',
-      answers: ['iphone', 'iPhone']
+      id: 'neal-paper-29',
+      type: 'NEAL.FUN HUNT',
+      title: 'The Paper Tower',
+      task: 'Visit the paper folding experiment.',
+      clue: 'A single sheet of paper doubles its thickness every time it is folded. According to the experiment, after how many folds does the paper become about 53.7 km tall, roughly the length of Rhode Island?',
+      link: 'https://neal.fun/',
+      hint: 'Just fold or unfold the paper until the height matches the value shown.',
+      answers: ['29 folds', '29']
     },
     {
-      id: 'wb-jntuh',
-      type: 'WAYBACK DETECTIVE',
-      title: 'The JNTUH Archive',
-      task: 'Visit the JNTUH website from the past.',
-      clue: 'Use the Wayback Machine to visit jntuh.ac.in from around 2010. Look at the top area of the homepage. What short phrase appears below the JNTUH logo?',
-      link: 'https://archive.org',
-      hint: 'Check the top banner area of the page.',
-      answers: ['gateway to excellence']
+      id: 'neal-paper-34',
+      type: 'NEAL.FUN HUNT',
+      title: 'The Paper Tower',
+      task: 'Visit the paper folding experiment.',
+      clue: 'A single sheet of paper doubles its thickness every time it is folded. According to the experiment, how many folds are needed for the paper to reach about 1,718 km, longer than California?',
+      link: 'https://neal.fun/',
+      hint: 'Just fold or unfold the paper until the height matches the value shown.',
+      answers: ['34 folds', '34']
     }
   ],
   inspect: [
@@ -315,14 +316,14 @@ const QUESTION_BANK = {
       clue: 'Every developer leaves little secrets in the code. Visit the event webpage and open the page source (Ctrl+U or F12). Somewhere inside the HTML comments, a hidden phrase is waiting. What is the secret key?',
       link: '',
       hint: 'Search the page source for <!-- comment -->.',
-      answers: ['quest2026_secret', 'quest2026_win']
+      answers: ['quest2026_win']
     },
     {
       id: 'ins-meta',
       type: 'INSPECT CHALLENGE',
       title: 'The Hidden Meta Tag',
       task: 'Inspect the <head> section.',
-      clue: "Not everything on a webpage is visible. Inspect the <head> section of the page and find the hidden meta tag named 'quest-key'. What is its content value?",
+      clue: "Every developer leaves little secrets in the code. Visit the event webpage and open the page source (Ctrl+U or F12). Inspect the <head> section of the page and find the hidden meta tag named 'quest-key'. What is its content value?",
       link: '',
       hint: 'Look for a <meta> tag with a custom name.',
       answers: ['spin_the_wheel']
@@ -332,7 +333,7 @@ const QUESTION_BANK = {
       type: 'INSPECT CHALLENGE',
       title: 'The Invisible Text',
       task: 'Inspect hidden CSS text.',
-      clue: 'Some clues are hidden in plain sight. Inspect the page elements and find the text that is hidden using CSS display:none. What word is hidden there?',
+      clue: 'Every developer leaves little secrets in the code. Visit the event webpage and open the page source (Ctrl+U or F12). Inspect the page elements and find the text that is hidden using CSS display:none. What word is hidden there?',
       link: '',
       hint: 'Search for elements with display:none.',
       answers: ['jackpot']
@@ -342,7 +343,7 @@ const QUESTION_BANK = {
       type: 'INSPECT CHALLENGE',
       title: 'The Data Attribute',
       task: 'Inspect element attributes.',
-      clue: 'Developers sometimes store secrets inside attributes. Inspect the button element on the page and find the value of the data-code attribute.',
+      clue: 'Every developer leaves little secrets in the code. Visit the event webpage and open the page source (Ctrl+U or F12). Inspect the button element on the page and find the value of the data-code attribute.',
       link: '',
       hint: 'Look for attributes starting with data-.',
       answers: ['debug_master']
@@ -350,19 +351,19 @@ const QUESTION_BANK = {
     {
       id: 'ins-js-variable',
       type: 'INSPECT CHALLENGE',
-      title: 'The JavaScript Variable',
+      title: 'The API Endpoint Secret',
       task: 'Check the script section.',
-      clue: 'Some secrets are hidden inside scripts. Inspect the page and find the variable named treasureKey. What value is assigned to it?',
+      clue: 'Every developer leaves little secrets in the code. Visit the event webpage and open the page source (Ctrl+U or F12). Inspect the page and find the API_URL variable. What domain value is assigned to it?',
       link: '',
-      hint: 'Search inside <script> tags.',
-      answers: ['luck_logic']
+      hint: 'Search inside <script> tags for const API_URL.',
+      answers: ['https://webdetective.onrender.com', 'webdetective.onrender.com']
     },
     {
       id: 'ins-image',
       type: 'INSPECT CHALLENGE',
       title: 'The Hidden Image Name',
       task: 'Inspect hidden media.',
-      clue: 'A hidden treasure is stored in the assets. Inspect the page elements and find the name of the hidden image file used in the HTML.',
+      clue: 'Every developer leaves little secrets in the code. Visit the event webpage and open the page source (Ctrl+U or F12). A hidden treasure is stored in the assets. Inspect the page elements and find the name of the hidden image file used in the HTML.',
       link: '',
       hint: 'Look at <img> tags inside the code.',
       answers: ['golden_spin.png', 'golden spin png']
@@ -370,12 +371,17 @@ const QUESTION_BANK = {
   ]
 };
 
+function normalizeDomainName(domain) {
+  const normalized = String(domain || '').trim().toLowerCase();
+  return normalized === 'nigel' ? 'neal' : normalized;
+}
+
 function getDefaultQuestionsFlat() {
   return Object.entries(QUESTION_BANK)
     .flatMap(([domain, list]) =>
       list.map(question => ({
         ...question,
-        domain,
+        domain: normalizeDomainName(domain),
         isActive: true
       }))
     );
@@ -496,30 +502,28 @@ function writeStore(store) {
 }
 
 async function listQuestions(includeInactive = false) {
-  // CHANGE TO: Use QUESTION_BANK directly
-  const all = Object.entries(QUESTION_BANK)
-    .flatMap(([domain, list]) =>
-      list.map(question => ({
-        ...question,
-        domain,
-        isActive: true
-      }))
-    );
-  
-  return includeInactive ? all : all.filter(q => q.isActive !== false);
-}
+  if (!USE_DATABASE) {
+    const store = readStore();
+    const all = Array.isArray(store.questions) ? store.questions : [];
+    return includeInactive ? all : all.filter(q => q.isActive !== false);
+  }
 
-async function getQuestionsByDomain() {
-  // Use QUESTION_BANK directly
-  return Object.entries(QUESTION_BANK)
-    .reduce((acc, [domain, questions]) => {
-      acc[domain] = questions.map(q => ({
-        ...q,
-        domain,
-        isActive: true
-      }));
-      return acc;
-    }, {});
+  const query = includeInactive
+    ? 'SELECT * FROM questions ORDER BY domain, title'
+    : 'SELECT * FROM questions WHERE is_active = TRUE ORDER BY domain, title';
+  const { rows } = await pool.query(query);
+  return rows.map(row => ({
+    id: row.id,
+    domain: row.domain,
+    type: row.type,
+    title: row.title,
+    task: row.task,
+    clue: row.clue,
+    link: row.link || '',
+    hint: row.hint,
+    answers: Array.isArray(row.answers) ? row.answers : [],
+    isActive: Boolean(row.is_active)
+  }));
 }
 
 async function getQuestionMapById(includeInactive = false) {
@@ -530,11 +534,23 @@ async function getQuestionMapById(includeInactive = false) {
   }, {});
 }
 
+async function getQuestionsByDomain() {
+  const questions = await listQuestions(false);
+  return questions.reduce((acc, q) => {
+    const domain = normalizeDomainName(q.domain);
+    if (!acc[domain]) acc[domain] = [];
+    acc[domain].push({ ...q, domain });
+    return acc;
+  }, {});
+}
+
 async function createQuestion(question) {
+  const normalizedDomain = normalizeDomainName(question.domain);
+
   if (!USE_DATABASE) {
     const store = readStore();
     store.questions = store.questions || [];
-    store.questions.push(question);
+    store.questions.push({ ...question, domain: normalizedDomain });
     writeStore(store);
     return;
   }
@@ -546,7 +562,7 @@ async function createQuestion(question) {
     `,
     [
       question.id,
-      question.domain,
+      normalizedDomain,
       question.type,
       question.title,
       question.task,
@@ -560,11 +576,13 @@ async function createQuestion(question) {
 }
 
 async function updateQuestion(questionId, updates) {
+  const normalizedDomain = normalizeDomainName(updates.domain);
+
   if (!USE_DATABASE) {
     const store = readStore();
     const idx = (store.questions || []).findIndex(q => q.id === questionId);
     if (idx < 0) return false;
-    store.questions[idx] = { ...store.questions[idx], ...updates };
+    store.questions[idx] = { ...store.questions[idx], ...updates, domain: normalizedDomain };
     writeStore(store);
     return true;
   }
@@ -586,7 +604,7 @@ async function updateQuestion(questionId, updates) {
     `,
     [
       questionId,
-      updates.domain,
+      normalizedDomain,
       updates.type,
       updates.title,
       updates.task,

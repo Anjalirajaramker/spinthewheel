@@ -231,7 +231,8 @@ const QUESTION_BANK = {
       task: 'Visit the Wikipedia page for Linux.',
       clue: "The world's most famous open-source operating system started as a personal project. According to Wikipedia, in which year was Linux first released?",
       link: 'https://en.wikipedia.org/wiki/Linux',
-      hint: "Look in the infobox under 'Initial release'."
+      hint: "Look in the infobox under 'Initial release'.",
+      answers: ['1991']
     },
     {
       id: 'wiki-turing',
